@@ -4,16 +4,16 @@
 - Go installed on your machine
 - OCB Builder downloaded with correct binaries from: https://github.com/open-telemetry/opentelemetry-collector-releases/releases
 
-# OpenTelemetry Collector Components
+## OpenTelemetry Collector Components
 This repository provides a set of OpenTelemetry Collector components that can be used to build custom telemetry
 pipelines.
 It only includes the most commonly used components and is not meant to be a complete list of all available components.
 
-# Registry
+## Registry
 Following this link you can find the official open telemetry registration: https://opentelemetry.io/ecosystem/registry/
 Most of the modules can be found and included from there.
 
-# List of modules to include
+## List of modules to include
 
 | Type          | Name                          | Repository                                                                                        | Version  |
 |---------------|-------------------------------|---------------------------------------------------------------------------------------------------|----------|
@@ -54,7 +54,7 @@ Most of the modules can be found and included from there.
 |               | YamlProvider                  | go.opentelemetry.io/collector/confmap/provider/yamlprovider                                       | v1.37.0  |
 
 
-# How to use
+## How to use
 1. Configure necessary components in the `builder-config.yaml` file.
 2. Run the builder from the directory that contains the downloaded binaries with the command:
 ```bash
