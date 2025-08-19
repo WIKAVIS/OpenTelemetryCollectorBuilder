@@ -1,0 +1,85 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+processors:
+  batch:
+  memory_limiter:
+      # check_interval is the time between measurements of memory usage.
+    check_interval: 5s
+      # By default limit_mib is set to 80% of ".Values.resources.limits.memory"
+    limit_percentage: 80
+      # By default spike_limit_mib is set to 25% of ".Values.resources.limits.memory"
+    spike_limit_percentage: 25
+
+connectors:
+  spanmetrics:
+    histogram:
+      dimensions:
+        - name: url.scheme
+          default: https
+      explicit:
+        buckets: [100us, 1ms, 2ms, 6ms, 10ms, 100ms, 250ms]  
+    dimensions:
+      - name: http.method
+        default: GET
+      - name: http.status_code
+    calls_dimensions:
+      - name: http.url
+        default: /ping
+    exemplars:
+      enabled: true
+    exclude_dimensions: ['status.code']
+    aggregation_temporality: "AGGREGATION_TEMPORALITY_CUMULATIVE"    
+    metrics_flush_interval: 15s
+    metrics_expiration: 5m
+    events:
+      enabled: true
+      dimensions:
+        - name: exception.type
+        - name: exception.message
+    resource_metrics_key_attributes:
+      - service.name
+      - telemetry.sdk.language
+      - telemetry.sdk.name
+    include_instrumentation_scope:
+      - express
+  
+  servicegraph:
+    latency_histogram_buckets: [2ms, 4ms, 6ms, 8ms, 10ms, 50ms, 100ms, 200ms, 400ms, 800ms, 1s, 1400ms, 2s, 5s, 10s, 15s]
+    dimensions:
+      - client
+      - server
+      - connection_type
+    store:
+      ttl: 2s
+      max_items: 1000
+    cache_loop: 2m
+    store_expiration_loop: 2s
+    virtual_node_peer_attributes:
+      - db.name
+      - rpc.service
+  
+  exceptions:
+    dimensions: []
+exporters:
+  debug:
+    verbosity: detailed
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [debug, spanmetrics, servicegraph, exceptions]
+    metrics:
+      receivers: [otlp, spanmetrics, servicegraph, exceptions]
+      processors: [memory_limiter, batch]
+      exporters: [debug]
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [debug]
