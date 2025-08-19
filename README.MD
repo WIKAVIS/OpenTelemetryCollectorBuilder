@@ -1,5 +1,9 @@
 # Open Telemetry Collector Builder
 
+## Reguirements 
+- Go installed on your machine
+- OCB Builder downloaded with correct binaries from: https://github.com/open-telemetry/opentelemetry-collector-releases/releases
+
 # OpenTelemetry Collector Components
 This repository provides a set of OpenTelemetry Collector components that can be used to build custom telemetry
 pipelines.
@@ -48,3 +52,22 @@ Most of the modules can be found and included from there.
 |               | HttpProvider                  | go.opentelemetry.io/collector/confmap/provider/httpprovider                                       | v1.37.0  |
 |               | HttpsProvider                 | go.opentelemetry.io/collector/confmap/provider/httpsprovider                                      | v1.37.0  |
 |               | YamlProvider                  | go.opentelemetry.io/collector/confmap/provider/yamlprovider                                       | v1.37.0  |
+
+
+# How to use
+1. Configure necessary components in the `builder-config.yaml` file.
+2. Run the builder from the directory that contains the downloaded binaries with the command:
+```bash
+./ocb --config builder-config.yaml  
+```
+3. Generate a `collector-config.yaml`
+4. Build the Docker image with the command:
+```bash
+ docker build -t otelcol-company-collector:1.0.0 . 
+```
+From here on you can run the collector with the command:
+```bash
+ docker run -p 4317:4317 -p 4318:4318 otelcol-company-collector:1.0.0
+```
+
+(An Example configuration can be found in the current builder-config and collector-config files)
