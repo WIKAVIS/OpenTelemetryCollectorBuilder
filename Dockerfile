@@ -1,5 +1,15 @@
 FROM alpine:3.19 AS certs
 RUN apk --update add ca-certificates
+RUN apk add --no-cache curl
+
+# https://trustbundle.bmwgroup.net/BMW_Trusted_Certificates_Latest.pem
+ARG CA_DOWNLOAD_URLS=""
+
+RUN if [ ! -z "$CA_DOWNLOAD_URLS" ]; then \
+    for CA_URL in $CA_DOWNLOAD_URLS; do \
+      curl -s $CA_URL >> /etc/ssl/certs/ca-certificates.crt \
+    done \
+    fi
 
 FROM golang:1.23.6 AS build-stage
 WORKDIR /build
