@@ -7,7 +7,7 @@ ARG CA_DOWNLOAD_URLS=""
 
 RUN if [ ! -z "$CA_DOWNLOAD_URLS" ]; then \
     for CA_URL in $CA_DOWNLOAD_URLS; do \
-      curl -s $CA_URL >> /etc/ssl/certs/ca-certificates.crt \
+      curl -s $CA_URL >> /etc/ssl/certs/ca-certificates.crt ; \
     done \
     fi
 
