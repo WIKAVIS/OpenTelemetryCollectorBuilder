@@ -46,7 +46,8 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             # SHA based tag for unique ID
-            type=sha,prefix={{branch}}-
+            type=sha,prefix={{branch}}-,suffix=,event=branch
+            type=sha,prefix=pr-{{branch}}-,suffix=,event=pr
 
       - name: Build docker
         id: docker-build
